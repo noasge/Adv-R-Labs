@@ -1,0 +1,189 @@
+---
+title: "Lab 1. Objects"
+author: "Dr. Jared Joseph"
+format:
+  html:
+    self-contained: true
+editor: source
+editor_options: 
+  chunk_output_type: console
+---
+
+## Introduction to Labs
+
+Each lab in this course will be completed through GitHub classroom. For each lab you will clone a template repo with a Quarto document within it (the source of the web page you are looking at now!). To complete the lab you will fill out that quarto document, and push your work to GitHub. Note however, that you *should not* wait to push until you are "done"; pushes are not like "turning in" an assignment. Each commit is a save point you can go back to if something doesn't work, so you should commit and push often. The most recent push at the due date will be what is evaluated for proficiency according to the [course standards](https://adv-r-programming.github.io/Adv-R-Reader/syllabus/#standards).
+
+Compared to worksheets, where individual functions are explained, labs remove that support and ask you to figure out the solutions to the problems on your own. This will involve referring back to past material in the class (not just the current week), reading documentation, and trying new things. The labs are purposefully made to go *just a little beyond* what we have covered thus far.
+
+The good news is you're not in it alone. The entirety of Friday class time is dedicated to giving you time and space to work on these problems. Additionally, you are actively encouraged to work with others. The final project is a group one, so use these labs to talk with several different groups and find people you think you work well with. However, you **cannot** simply copy code from your neighbor; make sure you understand *why* the code is working as it is. The content of this course will quickly build on itself, and if you leave one week without doing the work of understanding the material, the next week will only be harder. If your neighbor is also stuck, always remember the `#coding-help` [slack channel](https://sds-270-01-202303.slack.com/).
+
+## Getting the Lab Files
+
+Click here to access the lab on Github Classroom:
+[Github Classroom Assignment for Lab 1: Objects](https://moodle.smith.edu/mod/url/view.php?id=1005364)
+
+Once you have created a repo, go to your repo page and click the green `Code` button. In the resulting dropdown, make sure you select the `SSH` version, and copy the link.
+
+![](img/github_repo.png)
+
+Once you have that link, you can clone the repo using R Studio, and it will create a project directory for you. You can do this by clicking the project drop down in the upper right corner, and selecting "New Project." Rather than creating a entirely new project though, you'll use R Studio to clone the repo from GitHub. Select Version Control, then Git, then past the SSH link you just copied above.
+
+::: {layout-ncol=3}
+
+![](img/proj1.png)
+
+![](img/proj2.png)
+
+![](img/proj3.png)
+
+:::
+
+R will then open the new project, where you can work on this very Quarto document. Make sure to commit and push your changes often!
+
+## Overview
+
+For this first lab we will be manipulating R objects is some novel ways. Most of the changes we make wouldn't be something you would really *want* to do normally, but understanding how they work give you insight into R's structures which will be helpful in developing your own later. For now, treat thee questions as puzzles to be solved.
+
+In this lab, I am particularly looking at the Data Structures, Code Style, and git/GitHub standards. We will primarily be using data within R. However, you will need to install the `jsonlite` package if you do not have it already. We will use it later when talking about lists to load some data.
+
+### Vectors
+
+We'll start by doing some normal sub-setting with vectors. 
+
+:::{.callout-note}
+#### Question 1
+
+Create a new vector called `q2_vector` by sub-setting `q1_vector` in a way that removes all numbers.
+
+:::
+
+```{r}
+# create question vector
+q1_vector = c(TRUE, T, "FALSE", F, 0, 1, "TRUE", 1, 0, TRUE, F, "true", "T", FALSE, T)
+
+# my answer:
+q2_vector = as.logical(q1_vector)
+q2_vector
+```
+
+:::{.callout-note}
+#### Question 2
+
+Modify the following code such that the final summed value of `q2_vector` (created above) is equal to 7.
+
+:::
+
+```{r, error=TRUE}
+# my answer
+# get final summed value of 7
+sum(as.numeric(q2_vector), na.rm = TRUE)
+```
+
+::: {.callout-tip}
+#### Tip
+
+Are you committing frequently? Do you have good commit messages? These are considered in the git standard!
+:::
+
+### Lists
+
+For the section on lists we will be working with some JSON data regarding who is presently on in space[^1]. Read it into your environment using the following code:
+
+[^1]: Thanks to [Open Notify](http://open-notify.org) for making this data easily accessible. 
+
+```{r}
+current_space = jsonlite::read_json("http://api.open-notify.org/astros.json")
+```
+
+We now have a list object containing all the people currently in the great void above us, including their names and what vessel they are on.
+
+:::{.callout-note}
+#### Question 3
+
+To warm up, subset our `current_space` object to get the name of the **craft** that astronaut "Nicole Mann" is currently on.
+
+:::
+
+```{r}
+# my answer
+current_space$people[[4]]$craft
+```
+
+:::{.callout-note}
+#### Question 4
+
+From the `current_space` object, subset just the `people` element into a new list, such that it is a single list with 10 elements (one for each person). Call this new object `people_list`.
+
+:::
+
+```{r}
+# my answer
+people_list = current_space$people
+people_list
+```
+
+Now that we have just the people isolated, we're going to start working on turning this list into a dataframe.
+
+:::{.callout-note}
+#### Question 5
+
+Take the new `people_list` object, and turn it into a named vector. Call this object `people_vector`.
+
+:::
+
+```{r}
+# my answer
+people_vector = unlist(people_list)
+people_vector
+```
+
+Now that we have a named vector, we can create a dataframe from it. 
+
+:::{.callout-note}
+#### Question 6
+
+Take `people_vector` and turn it into a dataframe called `people_dataframe` using only built-in R functions (no packages!).
+
+*Hint: Combine your knowledge of attributes and sub-setting.*
+
+:::
+
+```{r}
+# my answer
+
+people_dataframe = 
+
+data.frame
+
+attr(people_list, names)
+attr(people_list, colnames())
+
+people_dataframe = unlist(people_list, )
+people_dataframe
+```
+
+### Challenge Question
+
+At the end of every lab there will be one or more challenge questions. These questions are more difficult than others, and will often take some time. However, they will also frequently give you an opportunity to move higher on the standards matrix than other questions in the lab.
+
+Given this is the first lab and we don't have much content to work with, this one is primarily just for fun.
+
+:::{.callout-warning}
+#### CHALLANGE QUESTION
+
+Now that we know a bit more about how dataframes and lists are related, we can use that knowledge to break things.
+
+Using attributes, create a dataframe (`df_a`) where an entirely different dataframe (`df_b`) is contained within **one cell** of the first dataframe (`df_a`). R *does not* want you to do this, so you'll need to get creative.
+
+:::
+
+```{r}
+
+# <REPLACE THIS COMMENT WITH YOUR ANSWER>
+
+```
+
+
+
+
+
